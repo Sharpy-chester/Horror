@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject documentViewer;
     public bool showingDocument = false;
     public Text tooltipText;
+    [SerializeField] Text endOfTechDemoText;
     private static UIManager _instance;
     public static UIManager Instance { get { return _instance; } }
 
@@ -63,5 +64,10 @@ public class UIManager : MonoBehaviour
         showingDocument = false;
         FindObjectOfType<PlayerLook>().canLook = true;
         FindObjectOfType<PlayerMovement>().canMove = true;
+    }
+
+    public void ShowEndText()
+    {
+        endOfTechDemoText.enabled = true;
     }
 }

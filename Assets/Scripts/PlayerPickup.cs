@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerPickup : MonoBehaviour
 {
     Transform playerCameraTransform;
-    [SerializeField] int selectedItem = 0;
+    
     [SerializeField] float dropDist = 2f;
     [SerializeField] float interactDist = 3f;
     Tooltip tooltip;
@@ -18,10 +18,9 @@ public class PlayerPickup : MonoBehaviour
 
     void Update()
     {
-        hit = InteractRaycast.Instance.RayHit();
+        InteractRaycast.Instance.RayHit(out hit);
         Tooltips();
         Interaction();
-        ItemSelectInput();
     }
 
     void Tooltips()
@@ -68,7 +67,7 @@ public class PlayerPickup : MonoBehaviour
                 }
             }
         }
-        if (Input.GetButtonDown("Drop") && Inventory.Instance.inventory[selectedItem] != null)
+        if (Input.GetButtonDown("Drop") && Inventory.Instance.inventory[Inventory.Instance.selectedItem] != null)
         {
             DropHeldItem();
         }
@@ -76,22 +75,22 @@ public class PlayerPickup : MonoBehaviour
 
     public void DropHeldItem()
     {
-        if(Inventory.Instance.inventory[selectedItem] != null)
+        if(Inventory.Instance.inventory[Inventory.Instance.selectedItem] != null)
         {
-            GameObject item = Instantiate(Inventory.Instance.inventory[selectedItem].itemPrefab, transform.position, Quaternion.identity);
+            GameObject item = Instantiate(Inventory.Instance.inventory[Inventory.Instance.selectedItem].itemPrefab, transform.position, Quaternion.identity);
             item.transform.parent = transform;
             //i could do it without making it a parent, but my brains mush at the moment
             item.transform.localPosition = Vector3.forward * dropDist;
             item.transform.parent = null;
-            Inventory.Instance.RemoveFromInventory(selectedItem);
-            UIManager.Instance.UpdateInv(selectedItem);
+            Inventory.Instance.RemoveFromInventory(Inventory.Instance.selectedItem);
+            UIManager.Instance.UpdateInv(Inventory.Instance.selectedItem);
         }
     }
 
     void PickupItem(Transform item)
     {
         Inventory.Instance.AddToInventory(item.GetComponent<HoldableItem>());
-        UIManager.Instance.UpdateInv(selectedItem);
+        UIManager.Instance.UpdateInv(Inventory.Instance.selectedItem);
         if(tooltip != null)
         {
             tooltip.HideText();
@@ -100,27 +99,5 @@ public class PlayerPickup : MonoBehaviour
         Destroy(item.gameObject);
     }
 
-    void ItemSelectInput()
-    {
-        int oldSelectedItem = selectedItem;
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            selectedItem = 0;
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            selectedItem = 1;
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            selectedItem = 2;
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            selectedItem = 3;
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            selectedItem = 4;
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            selectedItem = 5;
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-            selectedItem = 6;
-
-        if(selectedItem != oldSelectedItem)
-        {
-            UIManager.Instance.UpdateInv(selectedItem);
-        }
-    }
+    
 }

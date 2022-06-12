@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class InteractRaycast : MonoBehaviour
 {
-    RaycastHit hit;
     [SerializeField] Transform playerCameraTransform;
     [SerializeField] float interactDist;
     private static InteractRaycast _instance;
@@ -22,13 +21,8 @@ public class InteractRaycast : MonoBehaviour
         }
     }
 
-    void Update()
+    public bool RayHit(out RaycastHit hit)
     {
-        Physics.Raycast(playerCameraTransform.position, playerCameraTransform.TransformDirection(Vector3.forward), out hit, interactDist);
-    }
-
-    public RaycastHit RayHit()
-    {
-        return hit;
+        return Physics.Raycast(playerCameraTransform.position, playerCameraTransform.TransformDirection(Vector3.forward), out hit, interactDist); ;
     }
 }
